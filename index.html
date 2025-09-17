@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Missão Musical - Mega Música</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&family=Lilita+One&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+    <style>
+        :root {
+            --primary-color: #e67e22; /* Laranja Escuro Principal */
+            --secondary-color: #d35400; /* Laranja Escuro Secundário */
+            --bg-color: #121212; /* Fundo Preto */
+            --container-bg: #1e1e1e; /* Fundo Container (Cinza escuro) */
+            --card-front-color: linear-gradient(135deg, #e67e22, #d35400);
+            --text-primary: #ffffff; /* Texto Branco */
+            --text-secondary: #dddddd; /* Texto Cinza Claro */
+            --success-color: #2ecc71;
+            --error-color: #e74c3c;
+            --border-color: #e67e22; /* Laranja para a borda */
+            --shadow-color: #000000;
+        }
+
+        @keyframes pop {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        @keyframes fadeInGrow {
+            from {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        body {
+            font-family: 'Fredoka', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-color);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23e67e22' fill-opacity='0.1'%3E%3Cpath opacity='.5' d='M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z'/%3E%3Cpath d='M6 5V0h1v5h9V0h1v5h9V0h1v5h9V0h1v5h9V0h1v5h9V0h1v5h9V0h1v5h9V0h1v5h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h-1v-9h-9v9h-1v-9h-9v9h-1v-9h-9v9h-1v-9h-9v9h-1v-9h-9v9h-1v-9h-9v9h-1v-9h-9v9H5v-1h1v-9H5v-1h1v-9H5v-1h1v-9H5v-1h1v-9H5v-1h1v-9H5v-1h1v-9H5v-1h1V5h-1V0H0v1h5v9H0v1h5v9H0v1h5v9H0v1h5v9H0v1h5v9H0v1h5v9H0v1h5v9H0v1h5v9h1v-9h9v9h1v-9h9v9h1v-9h9v9h1v-9h9v9h1v-9h9v9h1v-9h9v9h1v-9h9v9h1v-9h9v-9h-9v9h-1v-9h-9v9h-1v-9h-9v9h-1v-9h-9v9h-1v-9h-9v9h-1v-9h-9v9h-1v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm-9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm-9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm-9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+            color: var(--text-primary);
+            overflow: hidden;
+        }
+
+        .screen { display: none; }
+        .screen.active { display: block; }
+        
+        .game-container {
+            background: var(--container-bg);
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+            text-align: center;
+            max-width: 550px;
+            width: 95%;
+            border: 5px solid var(--border-color);
+            box-sizing: border-box;
+        }
+
+        .main-title {
+            font-family: 'Lilita One', cursive;
+            color: var(--primary-color);
+            font-size: 3.5em;
+            margin: 0;
+            text-shadow: 3px 3px 0px var(--shadow-color);
+            letter-spacing: 2px;
+        }
+
+        .sub-title {
+            font-size: 1.5em;
+            margin: 0 0 25px 0;
+            font-weight: 700;
+        }
+        
+        .game-info {
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 1.3em; font-weight: 700; margin-bottom: 20px;
+        }
+
+        /* --- TELA DE MENU --- */
+        #main-menu .game-container { max-width: 450px; }
+        #main-menu .menu-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; }
+        .menu-btn, .back-to-menu-btn, .action-btn {
+            font-family: 'Fredoka', sans-serif;
+            background-color: var(--primary-color);
+            color: var(--text-primary);
+            border: 3px solid var(--shadow-color);
+            padding: 15px 20px;
+            border-radius: 15px;
+            font-size: 1.2em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 5px 0 var(--shadow-color);
+        }
+        .menu-btn:hover, .back-to-menu-btn:hover, .action-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 0 var(--shadow-color); }
+        .menu-btn:active, .back-to-menu-btn:active, .action-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--shadow-color); }
+        .back-to-menu-btn { width: 100%; margin-top: 20px; }
+
+        /* --- JOGO DA MEMÓRIA --- */
+        #memory-game-board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 25px; perspective: 1200px; }
+        .card { background-color: transparent; width: 100%; aspect-ratio: 1 / 1; cursor: pointer; position: relative; transform-style: preserve-3d; transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1); will-change: transform; }
+        .card.flipped { transform: rotateY(180deg); }
+        .card.matched { animation: pop 0.5s; transform: rotateY(180deg) scale(0.95); opacity: 0.6; }
+        .card.shake { animation: shake 0.4s; }
+        .card-face { position: absolute; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; font-size: clamp(2rem, 10vw, 3rem); border-radius: 15px; backface-visibility: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.15); }
+        .card-front { background: var(--card-front-color); color: var(--text-primary); }
+        .card-back { background-color: var(--container-bg); transform: rotateY(180deg); }
+        
+        /* --- JOGO GENIUS --- */
+        #genius-info { text-align: center; margin-bottom: 20px; font-size: 1.5em; font-weight: bold;}
+        #genius-board { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 80%; max-width: 400px; margin: auto; }
+        .genius-pad { aspect-ratio: 1/1; border-radius: 30px; cursor: pointer; transition: all 0.1s ease-in-out; }
+        .genius-pad.active { transform: scale(0.95); opacity: 0.7; }
+        #genius-pad-0 { background-color: #2ecc71; } /* Verde */
+        #genius-pad-1 { background-color: #e74c3c; } /* Vermelho */
+        #genius-pad-2 { background-color: #f1c40f; } /* Amarelo */
+        #genius-pad-3 { background-color: #3498db; } /* Azul */
+        
+        /* --- JOGO SERPENTE RÍTMICA --- */
+        #snake-canvas { background-color: #000; border-radius: 15px; max-width: 100%; height: auto; }
+        #snake-controls { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; max-width: 300px; margin: 20px auto 0 auto; }
+        #snake-controls button { font-size: 1.5em; padding: 10px; line-height: 1; }
+        #snake-up { grid-column: 2 / 3; }
+        #snake-left { grid-column: 1 / 2; grid-row: 2 / 3; }
+        #snake-right { grid-column: 3 / 4; grid-row: 2 / 3; }
+        #snake-down { grid-column: 2 / 3; grid-row: 3 / 4; }
+        
+        /* --- JOGO CAÇA-RITMO --- */
+        #rhythm-hunt-board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; position: relative; aspect-ratio: 1/1; max-width: 400px; margin: auto; }
+        .rhythm-hunt-cell { border: 2px dashed var(--secondary-color); border-radius: 15px; }
+        .rhythm-note { position: absolute; font-size: 3em; cursor: pointer; animation: fadeInGrow 0.2s; user-select: none; }
+        
+        /* --- MODAL GERAL --- */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.75); display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.4s, visibility 0.4s; z-index: 1000; }
+        .modal.active { opacity: 1; visibility: visible; }
+        .modal-content { background: var(--container-bg); padding: 30px 40px; border-radius: 20px; text-align: center; transform: scale(0.7); transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); position: relative; }
+        .modal.active .modal-content { transform: scale(1); }
+        .modal-content h3 { font-family: 'Lilita One', cursive; color: var(--primary-color); font-size: 3.5em; margin: 0; text-shadow: 2px 2px 0 var(--shadow-color); }
+        #modal-score { font-size: 2.5em; margin: 10px 0; color: var(--primary-color); }
+        #coupon-display { background: var(--bg-color); padding: 15px; border-radius: 10px; margin: 20px 0; border: 2px dashed var(--border-color); }
+        #coupon-display p { margin: 5px 0; font-size: 1.2em; color: var(--text-secondary); }
+        #coupon-display strong { font-size: 1.5em; color: var(--primary-color); letter-spacing: 2px; }
+        .modal-buttons { display: flex; flex-direction: column; justify-content: center; gap: 15px; margin-top: 15px; }
+        .modal-buttons button { font-family: 'Fredoka', sans-serif; border: none; padding: 12px 25px; border-radius: 10px; font-size: 1em; font-weight: 700; cursor: pointer; transition: all 0.2s ease-in-out; }
+        #copy-coupon-btn { background-color: var(--success-color); color: var(--text-primary); }
+        #play-again-btn { background-color: var(--primary-color); color: var(--text-primary); }
+        .modal-buttons button:hover { transform: scale(1.05); }
+
+        /* --- AJUSTES PARA CELULARES --- */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .game-container {
+                padding: 20px 15px;
+                border-width: 3px;
+            }
+
+            .main-title {
+                font-size: 2.5em;
+            }
+
+            .sub-title {
+                font-size: 1.2em;
+                 margin-bottom: 20px;
+            }
+
+            #main-menu .menu-buttons {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .menu-btn, .back-to-menu-btn, .action-btn {
+                font-size: 1.1em;
+                padding: 12px 15px;
+            }
+
+            .game-info {
+                font-size: 1.1em;
+            }
+
+            #memory-game-board {
+                gap: 10px;
+            }
+
+            .card-face {
+                font-size: clamp(1.5rem, 10vw, 2.5rem);
+            }
+            
+            #genius-board {
+                 gap: 10px;
+                 width: 90%;
+            }
+            
+            #rhythm-hunt-board {
+                width: 100%;
+                gap: 10px;
+            }
+
+            .modal-content {
+                padding: 20px;
+                width: 90%;
+            }
+            
+            .modal-content h3 {
+                font-size: 2.5em;
+            }
+            
+            #modal-score {
+                font-size: 2em;
+            }
+
+            .modal-buttons {
+                flex-direction: row;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- TELA DE MENU PRINCIPAL -->
+    <div id="main-menu" class="screen active">
+        <div class="game-container">
+            <h1 class="main-title">Mega Música</h1>
+            <h2 class="sub-title">Central de Jogos!</h2>
+            <div class="menu-buttons">
+                <button id="start-memory-game-btn" class="menu-btn">Jogo da Memória</button>
+                <button id="start-genius-game-btn" class="menu-btn">Genius Musical</button>
+                <button id="start-snake-game-btn" class="menu-btn">Serpente Rítmica</button>
+                <button id="start-rhythm-game-btn" class="menu-btn">Caça-Ritmo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TELA JOGO DA MEMÓRIA -->
+    <div id="memory-game-screen" class="screen">
+        <div class="game-container">
+            <h1 class="main-title">Jogo da Memória</h1>
+            <div class="game-info"><span>Jogadas: </span><span id="moves-count">0</span></div>
+            <div id="memory-game-board"></div>
+            <button class="back-to-menu-btn">Voltar ao Menu</button>
+        </div>
+    </div>
+    
+    <!-- TELA JOGO GENIUS -->
+    <div id="genius-game-screen" class="screen">
+        <div class="game-container">
+            <h1 class="main-title">Genius Musical</h1>
+            <div id="genius-info">Rodada: <span id="genius-round">0</span></div>
+            <div id="genius-board">
+                <div class="genius-pad" id="genius-pad-0" data-pad="0"></div>
+                <div class="genius-pad" id="genius-pad-1" data-pad="1"></div>
+                <div class="genius-pad" id="genius-pad-2" data-pad="2"></div>
+                <div class="genius-pad" id="genius-pad-3" data-pad="3"></div>
+            </div>
+            <button class="back-to-menu-btn">Voltar ao Menu</button>
+        </div>
+    </div>
+
+    <!-- TELA JOGO SERPENTE RÍTMICA -->
+    <div id="snake-game-screen" class="screen">
+        <div class="game-container">
+            <h1 class="main-title">Serpente Rítmica</h1>
+            <div class="game-info"><span>Pontos: </span><span id="snake-score">0</span></div>
+            <canvas id="snake-canvas" width="400" height="400"></canvas>
+            <div id="snake-controls">
+                <button id="snake-up" class="action-btn">▲</button>
+                <button id="snake-left" class="action-btn">◄</button>
+                <button id="snake-right" class="action-btn">►</button>
+                <button id="snake-down" class="action-btn">▼</button>
+            </div>
+            <button class="back-to-menu-btn">Voltar ao Menu</button>
+        </div>
+    </div>
+
+    <!-- TELA JOGO CAÇA-RITMO -->
+    <div id="rhythm-hunt-screen" class="screen">
+        <div class="game-container">
+            <h1 class="main-title">Caça-Ritmo</h1>
+            <div class="game-info">
+                <span>Pontos: <span id="rhythm-score">0</span></span>
+                <span>Tempo: <span id="rhythm-timer">30</span></span>
+            </div>
+            <div id="rhythm-hunt-board"></div>
+            <button class="back-to-menu-btn">Voltar ao Menu</button>
+        </div>
+    </div>
+    
+    <!-- MODAL DE VITÓRIA UNIFICADO -->
+    <div class="modal" id="win-modal">
+        <div class="modal-content">
+            <h3 id="modal-title">Missão Cumprida!</h3>
+            <div id="modal-score"></div>
+            <p id="win-message">Você é uma estrela do rock! 🤘</p>
+            <div id="coupon-display">
+                <p>Seu cupom de <strong id="discount-amount"></strong> é:</p>
+                <strong id="coupon-code"></strong>
+            </div>
+            <div class="modal-buttons">
+                <button id="copy-coupon-btn">Copiar Cupom</button>
+                <button id="play-again-btn">Jogar Novamente</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- VARIÁVEIS GLOBAIS E DE NAVEGAÇÃO ---
+            const screens = document.querySelectorAll('.screen');
+            const startMemoryGameBtn = document.getElementById('start-memory-game-btn');
+            const startGeniusGameBtn = document.getElementById('start-genius-game-btn');
+            const startSnakeGameBtn = document.getElementById('start-snake-game-btn');
+            const startRhythmGameBtn = document.getElementById('start-rhythm-game-btn');
+            const backToMenuBtns = document.querySelectorAll('.back-to-menu-btn');
+            
+            const winModal = document.getElementById('win-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalScoreEl = document.getElementById('modal-score');
+            const discountAmountEl = document.getElementById('discount-amount');
+            const couponCodeEl = document.getElementById('coupon-code');
+            const copyCouponBtn = document.getElementById('copy-coupon-btn');
+            const playAgainBtn = document.getElementById('play-again-btn');
+            
+            const computedStyle = getComputedStyle(document.documentElement);
+            const snakeHeadColor = computedStyle.getPropertyValue('--secondary-color').trim();
+            const snakeBodyColor = computedStyle.getPropertyValue('--primary-color').trim();
+            let currentGame = null;
+
+            // --- NAVEGAÇÃO ENTRE TELAS ---
+            function showScreen(screenId) {
+                screens.forEach(screen => screen.classList.remove('active'));
+                document.getElementById(screenId).classList.add('active');
+                if(Tone.context.state !== 'running') { Tone.start(); }
+            }
+            startMemoryGameBtn.addEventListener('click', () => { showScreen('memory-game-screen'); currentGame = 'memory'; initMemoryGame(); });
+            startGeniusGameBtn.addEventListener('click', () => { showScreen('genius-game-screen'); currentGame = 'genius'; initGeniusGame(); });
+            startSnakeGameBtn.addEventListener('click', () => { showScreen('snake-game-screen'); currentGame = 'snake'; initSnakeGame(); });
+            startRhythmGameBtn.addEventListener('click', () => { showScreen('rhythm-hunt-screen'); currentGame = 'rhythm'; initRhythmGame(); });
+            backToMenuBtns.forEach(btn => btn.addEventListener('click', () => showScreen('main-menu')));
+            playAgainBtn.addEventListener('click', () => {
+                winModal.classList.remove('active');
+                if (currentGame === 'memory') initMemoryGame();
+                if (currentGame === 'genius') initGeniusGame();
+                if (currentGame === 'snake') initSnakeGame();
+                if (currentGame === 'rhythm') initRhythmGame();
+            });
+            copyCouponBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(couponCodeEl.textContent).then(() => { copyCouponBtn.textContent = 'Copiado! ✅'; });
+            });
+
+            // --- LÓGICA DO JOGO DA MEMÓRIA ---
+            const memoryBoard = document.getElementById('memory-game-board');
+            const movesCountEl = document.getElementById('moves-count');
+            const memoryInstruments = ['🎸', '🎹', '🎺', '🎻', '🥁', '🎷', '🎤', '🎧'];
+            let firstCard, secondCard, lockMemoryBoard, moves, matchesFound;
+            function initMemoryGame() {
+                memoryBoard.innerHTML = ''; moves = 0; matchesFound = 0; movesCountEl.textContent = moves; lockMemoryBoard = true;
+                const cardPairs = [...memoryInstruments, ...memoryInstruments].sort(() => 0.5 - Math.random());
+                cardPairs.forEach(inst => {
+                    const card = document.createElement('div'); card.classList.add('card'); card.dataset.instrument = inst;
+                    card.innerHTML = `<div class="card-face card-front">🎵</div><div class="card-face card-back">${inst}</div>`;
+                    card.addEventListener('click', flipCard); memoryBoard.appendChild(card);
+                });
+                const cards = memoryBoard.querySelectorAll('.card');
+                cards.forEach(card => card.classList.add('flipped'));
+                setTimeout(() => { cards.forEach(card => card.classList.remove('flipped')); lockMemoryBoard = false; }, 3000);
+            }
+            function flipCard() {
+                if (lockMemoryBoard || this.classList.contains('flipped') || this === firstCard) return;
+                sounds.flip(); this.classList.add('flipped');
+                if (!firstCard) { firstCard = this; return; }
+                secondCard = this; lockMemoryBoard = true; moves++; movesCountEl.textContent = moves;
+                (firstCard.dataset.instrument === secondCard.dataset.instrument) ? disableCards() : unflipCards();
+            }
+            function disableCards() {
+                sounds.match(); firstCard.classList.add('matched'); secondCard.classList.add('matched'); matchesFound++;
+                if (matchesFound === memoryInstruments.length) setTimeout(showMemoryWin, 1000);
+                [firstCard, secondCard, lockMemoryBoard] = [null, null, false];
+            }
+            function unflipCards() {
+                sounds.error(); firstCard.classList.add('shake'); secondCard.classList.add('shake');
+                setTimeout(() => {
+                    firstCard.classList.remove('flipped', 'shake'); secondCard.classList.remove('flipped', 'shake');
+                    [firstCard, secondCard, lockMemoryBoard] = [null, null, false];
+                }, 1200);
+            }
+            function showMemoryWin() {
+                sounds.win();
+                const stars = (moves <= 12) ? 3 : (moves <= 18) ? 2 : 1;
+                const coupon = {3: { d: "15% OFF", c: "MEGASTAR15" }, 2: { d: "10% OFF", c: "MEGASTAR10" }, 1: { d: "5% OFF", c: "MEGASTAR05" }}[stars];
+                showModal("Vitória!", '⭐'.repeat(stars) + '☆'.repeat(3 - stars), coupon.d, coupon.c);
+            }
+            
+            // --- LÓGICA DO JOGO GENIUS ---
+            const geniusRoundEl = document.getElementById('genius-round');
+            const geniusPads = document.querySelectorAll('.genius-pad');
+            let geniusSequence, playerSequence, geniusRound, lockGeniusBoard;
+            const padNotes = ["C4", "E4", "G4", "A4"];
+            function initGeniusGame() { geniusSequence = []; playerSequence = []; geniusRound = 0; lockGeniusBoard = true; geniusRoundEl.textContent = '0'; setTimeout(nextGeniusRound, 1000); }
+            async function playGeniusSequence() {
+                lockGeniusBoard = true;
+                for (const padIndex of geniusSequence) {
+                    await new Promise(r => setTimeout(r, 400));
+                    const pad = document.getElementById(`genius-pad-${padIndex}`); pad.classList.add('active'); sounds.geniusPad(padIndex);
+                    await new Promise(r => setTimeout(r, 400)); pad.classList.remove('active');
+                }
+                lockGeniusBoard = false;
+            }
+            function handleGeniusClick(e) {
+                if (lockGeniusBoard) return;
+                const clickedPadIndex = parseInt(e.target.dataset.pad);
+                e.target.classList.add('active'); sounds.geniusPad(clickedPadIndex); setTimeout(() => e.target.classList.remove('active'), 200);
+                playerSequence.push(clickedPadIndex);
+                if (playerSequence[playerSequence.length - 1] !== geniusSequence[playerSequence.length - 1]) { showGeniusLoss(); return; }
+                if (playerSequence.length === geniusSequence.length) { setTimeout(nextGeniusRound, 1000); }
+            }
+            function nextGeniusRound() {
+                geniusRound++; geniusRoundEl.textContent = geniusRound; playerSequence = []; lockGeniusBoard = true;
+                geniusSequence.push(Math.floor(Math.random() * 4)); playGeniusSequence();
+            }
+            function showGeniusLoss() {
+                sounds.error(); lockGeniusBoard = true; const score = geniusRound - 1;
+                const coupon = (score >= 10) ? { d: "15% OFF", c: "MEGAGENIUS15" } : (score >= 5) ? { d: "10% OFF", c: "MEGAGENIUS10" } : { d: "5% OFF", c: "MEGAGENIUS05" };
+                showModal("Fim de Jogo!", `Rodadas: ${score}`, coupon.d, coupon.c);
+            }
+            geniusPads.forEach(pad => pad.addEventListener('click', handleGeniusClick));
+            
+            // --- LÓGICA DA SERPENTE RÍTMICA ---
+            const snakeCanvas = document.getElementById('snake-canvas');
+            const snakeCtx = snakeCanvas.getContext('2d');
+            const snakeScoreEl = document.getElementById('snake-score');
+            const gridSize = 20; const tileCount = snakeCanvas.width / gridSize;
+            let snake, food, direction, snakeScore, snakeInterval;
+            const foodEmojis = ['🎸', '🎹', '🎺', '🎻', '🥁', '🎷'];
+            function initSnakeGame() {
+                clearInterval(snakeInterval);
+                snake = [{ x: 10, y: 10 }];
+                direction = { x: 0, y: 0 };
+                snakeScore = 0; snakeScoreEl.textContent = '0';
+                generateFood();
+                drawSnakeGame(); // Desenha o estado inicial imediatamente
+                snakeInterval = setInterval(snakeGameLoop, 150);
+                document.addEventListener('keydown', handleSnakeKeys);
+            }
+            function snakeGameLoop() {
+                if (direction.x === 0 && direction.y === 0) {
+                    drawSnakeGame(); // Continua a desenhar o estado inicial até o jogador se mover
+                    return;
+                }
+                const head = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
+                if (head.x < 0 || head.x >= tileCount || head.y < 0 || head.y >= tileCount || snake.some(p => p.x === head.x && p.y === head.y)) {
+                    showSnakeResult(); return;
+                }
+                snake.unshift(head);
+                if (head.x === food.x && head.y === food.y) {
+                    snakeScore++; snakeScoreEl.textContent = snakeScore; sounds.match(); generateFood();
+                } else { snake.pop(); }
+                drawSnakeGame();
+            }
+            function drawSnakeGame() {
+                snakeCtx.fillStyle = '#000'; snakeCtx.fillRect(0, 0, snakeCanvas.width, snakeCanvas.height);
+                snakeCtx.font = `${gridSize}px Fredoka`; snakeCtx.textAlign = 'center'; snakeCtx.textBaseline = 'middle';
+                snakeCtx.fillText(food.emoji, food.x * gridSize + gridSize / 2, food.y * gridSize + gridSize / 2);
+                snake.forEach((part, index) => {
+                    snakeCtx.fillStyle = index === 0 ? snakeHeadColor : snakeBodyColor;
+                    snakeCtx.fillRect(part.x * gridSize, part.y * gridSize, gridSize - 2, gridSize - 2);
+                });
+            }
+            function generateFood() {
+                let newFoodPosition;
+                do {
+                    newFoodPosition = { x: Math.floor(Math.random() * tileCount), y: Math.floor(Math.random() * tileCount) };
+                } while (snake.some(p => p.x === newFoodPosition.x && p.y === newFoodPosition.y));
+                food = { ...newFoodPosition, emoji: foodEmojis[Math.floor(Math.random() * foodEmojis.length)] };
+            }
+            function handleSnakeKeys(e) {
+                switch (e.key) {
+                    case "ArrowUp": if (direction.y === 0) direction = { x: 0, y: -1 }; break;
+                    case "ArrowDown": if (direction.y === 0) direction = { x: 0, y: 1 }; break;
+                    case "ArrowLeft": if (direction.x === 0) direction = { x: -1, y: 0 }; break;
+                    case "ArrowRight": if (direction.x === 0) direction = { x: 1, y: 0 }; break;
+                }
+            }
+            document.getElementById('snake-up').addEventListener('click', () => { if (direction.y === 0) direction = { x: 0, y: -1 }; });
+            document.getElementById('snake-down').addEventListener('click', () => { if (direction.y === 0) direction = { x: 0, y: 1 }; });
+            document.getElementById('snake-left').addEventListener('click', () => { if (direction.x === 0) direction = { x: -1, y: 0 }; });
+            document.getElementById('snake-right').addEventListener('click', () => { if (direction.x === 0) direction = { x: 1, y: 0 }; });
+            function showSnakeResult() {
+                clearInterval(snakeInterval); sounds.error(); document.removeEventListener('keydown', handleSnakeKeys);
+                const coupon = (snakeScore >= 20) ? { d: "15% OFF", c: "MEGASNAKE15" } : (snakeScore >= 10) ? { d: "10% OFF", c: "MEGASNAKE10" } : { d: "5% OFF", c: "MEGASNAKE05" };
+                showModal("Fim de Jogo!", `Pontos: ${snakeScore}`, coupon.d, coupon.c);
+            }
+
+            // --- LÓGICA DO CAÇA-RITMO ---
+            const rhythmScoreEl = document.getElementById('rhythm-score');
+            const rhythmTimerEl = document.getElementById('rhythm-timer');
+            const rhythmBoard = document.getElementById('rhythm-hunt-board');
+            let rhythmScore, rhythmTimer, rhythmInterval;
+            function initRhythmGame() {
+                clearInterval(rhythmInterval);
+                rhythmBoard.innerHTML = ''; rhythmScore = 0; rhythmScoreEl.textContent = '0'; rhythmTimer = 30; rhythmTimerEl.textContent = '30';
+                for(let i=0; i<9; i++) rhythmBoard.appendChild(document.createElement('div')).classList.add('rhythm-hunt-cell');
+                rhythmInterval = setInterval(rhythmGameLoop, 1000);
+            }
+            function rhythmGameLoop() {
+                rhythmTimer--; rhythmTimerEl.textContent = rhythmTimer;
+                if(rhythmTimer <= 0) { clearInterval(rhythmInterval); showRhythmResult(); return; }
+                showRhythmNote();
+            }
+            function showRhythmNote() {
+                const note = document.createElement('div'); note.textContent = '🎵'; note.classList.add('rhythm-note');
+                const cells = rhythmBoard.querySelectorAll('.rhythm-hunt-cell');
+                const randomCell = cells[Math.floor(Math.random() * cells.length)];
+                if (randomCell.children.length > 0) return;
+                note.style.top = `${randomCell.offsetTop + randomCell.offsetHeight / 2 - 20}px`;
+                note.style.left = `${randomCell.offsetLeft + randomCell.offsetWidth / 2 - 15}px`;
+                note.addEventListener('click', () => { rhythmScore++; rhythmScoreEl.textContent = rhythmScore; sounds.flip(); note.remove(); });
+                rhythmBoard.appendChild(note);
+                setTimeout(() => note.remove(), 1500 - (30 - rhythmTimer) * 30);
+            }
+            function showRhythmResult() {
+                const coupon = (rhythmScore > 25) ? { d: "15% OFF", c: "MEGARITMO15" } : (rhythmScore >= 15) ? { d: "10% OFF", c: "MEGARITMO10" } : { d: "5% OFF", c: "MEGARITMO05" };
+                showModal("Tempo Esgotado!", `Pontos: ${rhythmScore}`, coupon.d, coupon.c);
+            }
+
+            // --- FUNÇÃO MODAL UNIFICADA ---
+            function showModal(title, scoreText, discount, code) {
+                modalTitle.textContent = title;
+                modalScoreEl.innerHTML = scoreText;
+                discountAmountEl.textContent = discount;
+                couponCodeEl.textContent = code;
+                copyCouponBtn.textContent = 'Copiar Cupom';
+                winModal.classList.add('active');
+            }
+
+            // --- SONS GERAIS ---
+            const synth = new Tone.PolySynth(Tone.Synth).toDestination();
+            const sounds = {
+                flip: () => synth.triggerAttackRelease("C5", "8n"),
+                match: () => synth.triggerAttackRelease("G5", "8n"),
+                error: () => synth.triggerAttackRelease("C3", "8n"),
+                win: () => { const now = Tone.now(); synth.triggerAttackRelease("C4", "8n", now); synth.triggerAttackRelease("E4", "8n", now + 0.2); },
+                geniusPad: (index) => synth.triggerAttackRelease(padNotes[index], "8n"),
+            };
+        });
+    </script>
+</body>
+</html>
